@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>
+            function loadUsers() {
+                var name = document.getElementById("name").value;
+                var surname = document.getElementById("surname").value;
+               
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var respObj = JSON.parse(this.responseText);
+
+                        var list = respObj.obj;
+                        var str = "";
+                        for (var i = 0; i < list.length; i++) {
+                            var obj = list[i];
+                            str += "id=" + obj.id + " name=" + obj.name + " surname=" + obj.surname + "<br/>";
+                        }
+                        document.getElementById("demo").innerHTML = str;
+                    }
+                };
+                
+                var url = "http://localhost:8080/users?";
+                if(name.length>0){
+                    url+="&name="+name;
+                }
+                
+                if(surname.length>0){
+                    url+="&surname="+surname;
+                }
+                xhttp.open("GET", url, true);
+                xhttp.send();
+            }
+
+            function loadUser() {
+                var id = document.getElementById("userId").value;
+                var xhttp = new XMLHttpRequest();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var respObj =JSON.parse(this.responseText);
+                        var obj = respObj.obj;
+
+                        var str = "";
+
+                        str += "id=" + obj.id + " name=" + obj.name + " surname=" + obj.surname + "<br/>";
+                        document.getElementById("demo").innerHTML = str;
+                    }
+                };
+                xhttp.open("GET", "http://localhost:8080/users/" + id, true);
+                xhttp.send();
+            }
+        </script>
+    </head>
+    <body onload="loadUsers()">
+        <input type="text" id="name"/>
+        <input type="text" id="surname"/>
+        <input type="button" value="Axtar" onclick="loadUsers()"/>
+        <br/>
+        <br/>
+
+        <input type="text" id="userId"/>
+        <input type="button" onclick="loadUser()" value="Id-li useri götür"/>
+        <div id="demo">
+
+        </div>
+    </body>
+</html>
